@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Webtoon vers Discord</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #5865F2;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4752c4;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Envoyer un Webtoon sur Discord</h2>
+
+  <label for="webhook">Lien Webhook Discord :</label>
+  <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/...">
+
+  <label for="webtoon">Lien du Webtoon :</label>
+  <input type="text" id="webtoon" placeholder="https://www.webtoons.com/...">
+
+  <label for="message">Message à envoyer :</label>
+  <textarea id="message" rows="4" placeholder="Écris ton message ici..."></textarea>
+
+  <button onclick="envoyerSurDiscord()">Envoyer</button>
+
+  <script>
+    async function envoyerSurDiscord() {
+      const webhook = document.getElementById("webhook").value.trim();
+      const lien = document.getElementById("webtoon").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (!webhook || !lien || !message) {
+        alert("Merci de remplir tous les champs.");
+        return;
+      }
+
+      const contenu = `📖 **Nouveau Webtoon !**\n${lien}\n\n📝 ${message}`;
+
+      try {
+        const response = await fetch(webhook, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ content: contenu })
+        });
+
+        if (response.ok) {
+          alert("✅ Message envoyé avec succès !");
+        } else {
+          alert("❌ Erreur lors de l'envoi. Vérifie le lien du webhook.");
+        }
+      } catch (error) {
+        alert("⚠️ Erreur réseau : " + error);
+      }
+    }
+  </script>
+
+</body>
+</html>
